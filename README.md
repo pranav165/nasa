@@ -5,5 +5,5 @@ Coding Assignment
 
 # How to run
 
-On linux , install make
+On linux , install make and
 execute command -"make run"
