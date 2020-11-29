@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import urllib3
+import pytest
 from api.nasa_api import Nasa
 from settings import *
 
@@ -29,4 +30,7 @@ def fireball(locations):
 
 
 if __name__ == '__main__':
+    print("============================= App starts ==============================")
     fireball(locations=[loc_boston, loc_ncr, loc_sf])
+    print("============================= App Ends ==============================\n\n")
+    exit_code = pytest.main()

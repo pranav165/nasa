@@ -24,7 +24,7 @@ setup(
         'retry==0.9.2',
         'pytest-html==2.1.1',
         'wheel==0.35.1',
-        'flake8==3.8.4',
+        'flake8==3.8.4'
     ],
     provides=[],
     packages=find_packages(),
