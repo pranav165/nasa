@@ -63,7 +63,7 @@ class Nasa(ApiBase):
             raise NasaApiNoMatchingDataFoundError("ZERO records found for the filter criteria {}".format(params))
         return response
 
-    def filter_fireball_api_response(self, location=None, date_min='2017-01-01', buffer=15):
+    def filter_fireball_api_response(self, location=None, date_min='2019-01-01', date_max='2020-01-01', buffer=15):
         """
         Filter out response by lat /long. Buffer of +-15 is taken
         """
@@ -78,7 +78,8 @@ class Nasa(ApiBase):
 
         result = []
 
-        resp = self.get_fireball_response(params={"date-min": date_min, "req-loc": True, "sort": "-energy"})
+        resp = self.get_fireball_response(
+            params={"date-min": date_min, 'date-max': date_max, "req-loc": True, "sort": "-energy"})
         for res in resp["data"]:
             if (lat_dir == res[self.lat_dir] and long_dir == res[self.long_dir]
                     and check_in_range(res[self.lat], lat_min, lat_max) and check_in_range(res[self.long], long_min,
@@ -96,9 +97,13 @@ class Nasa(ApiBase):
         :return: fireball response with max star energy of all the locations
         """
         max_for_each_location = []
+        response = None
         for location in locations:
-            response = self.filter_fireball_api_response(location=location)
-            max_for_each_location.append(response)
+            try:
+                response = self.filter_fireball_api_response(location=location)
+            except NasaApiNoMatchingDataFoundError:
+                continue
+        max_for_each_location.append(response)
         max_star_energy_of_all = [round(float(res[self.star_energy]), 1) for res in max_for_each_location]
         max_idx = max_star_energy_of_all.index(max(max_star_energy_of_all))
         return max_for_each_location[max_idx]
